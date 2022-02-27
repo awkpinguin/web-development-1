@@ -4,8 +4,8 @@
 
     $countNum = $countChar = $countUpReg = $countDownReg = 0;   
 
-    $len = iconv_strlen($text); // считает количество символов
-    $arrFromText = str_split($text); // разбивает исходный текст на массив символов
+    $len = iconv_strlen($text);
+    $arrFromText = str_split($text);
 
     foreach($arrFromText as $newArrText)
     {
