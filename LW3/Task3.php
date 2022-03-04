@@ -1,87 +1,57 @@
 <?php
-    header("Content-Type: text/plain");
-    $text = trim($_GET['password']);
+header("Content-Type: text/plain");
+$password = $_GET['password'];
+$length = strlen($password);
 
-    $countNum = $countChar = $countUpReg = $countDownReg = 0;   
+if (!(ctype_alnum($password)))
+{
+    echo "Не является паролем.";
+} 
+else 
+{
+    $safety += 4 * $length;
 
-    $len = iconv_strlen($text);
-    $arrFromText = str_split($text);
-
-    foreach($arrFromText as $newArrText)
+    for ($i = 0; $i < $length; $i++)
     {
-        if(is_numeric($newArrText)) 
-        {
-            $countNum++;
-        }
-        else 
-        {
-            $countChar++;
+        if (is_numeric($password[$i]))
+            $count++;
+    }
+    $safety += $count * 4;
+    $count = 0;
 
-            if(ctype_upper($newArrText)) 
-            {
-                $countUpReg++;
-            }
-            else 
-            {
-                $countDownReg++;
-            }
-        }
+    for ($i = 0; $i < $length; $i++)
+    {
+        if (ctype_upper($password[$i]))
+            $count++;
     }
 
-    foreach(count_chars($text, 1) as $i => $value)
+    if ($count != 0)
+        $safety += ($length - $count) * 2;
+    $count = 0;
+
+    for ($i = 0; $i < $length; $i++)
     {
-        if($value > 1) 
-        {
-            $countReplay += $value;
-        }
+        if (ctype_lower($password[$i]))
+            $count++;
     }
+    if ($count != 0)
+        $safety += ($length - $count) * 2;
+    $count = 0;
 
-    echo 'Уровень надежности пароля: ' . getSafetyLevel($len, $countNum, $countChar, $countUpReg, $countDownReg, $countReplay);
+    if (ctype_alpha($password))
+        $safety -= $length;
+    if (ctype_digit($password))
+        $safety -= $length;
 
-    function getSafetyLevel($len, $countNum, $countChar, $countUpReg, $countDownReg, $countReplay): ?int
+    $result = count_chars($password);
+
+    foreach ($result as $val) 
     {
-        if($len != 0) 
+        if ($val > 1) 
         {
-            $safety += 4 * $len;
-
-            if($countChar != 0)
-            {
-                if($countNum != 0)
-                {
-                    $safety += 4 * $countNum;
-                }
-                else
-                {
-                    $safety -= $len;
-                }
-
-                if($countDownReg != 0)
-                {
-                    $safety += ($len - $countDownReg) * 2;
-                }
-
-                if($countUpReg != 0)
-                {
-                    $safety += ($len - $countUpReg) * 2;
-                }
-            }
-            else
-            {
-                $safety += 4 * $countNum;
-                $safety -= $len;
-            }
-
-            if($countReplay != 0)
-            {
-                $safety -= $countReplay;
-            }
-
-            return $safety;
-
-        } 
-        else
-        {
-            return 0;
+            $safety -= $val;
         }
-    }
+    }	
+    echo 'Уровень надежности пароля: ' . $safety;
+}		
 ?>

@@ -4,26 +4,21 @@
     $arrayText = str_split($text);
     $answer = 'Не введен ключ identifier или не присвоено значение ключу';
 
-    if($text = trim($_GET['identifier']))
+    if($text != null)
     {
-        if(ctype_alpha($text))
-        {
-            $answer = 'Yes';
-            echo 'Так как идентификатор состоит полностью из буквенных символом: ';
-        }
+        if(!ctype_alpha($arrayText[0]))
+            $answer = 'NO: Так как идентификатор должен начинаться строго с буквы.';
         else
         {
-            if(is_numeric($arrayText[0]))
+            for($i = 1; $i < count($arrayText); $i++)
             {
-                $answer = 'No';
-                echo 'Так как идентификатор не может начинаться с цифры: ';
-            }
-            else
-            {
-                $answer = 'Yes';
-                echo 'Идентификатор не может начинаться с цифры, НО содержать в себе цифры может, поэтому: ';
+                $checked = ctype_alpha($arrayText[$i]) || is_numeric($arrayText[$i]);
+                if(!$checked)
+                    $answer = 'NO: Так как идентификатор должен состоять исключительно из букв или цифр.';
+                else
+                    $answer = 'YES: Все хорошо:)';
             }
         }
     }
 
-    echo $answer . '.';
+    echo $answer;
