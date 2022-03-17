@@ -1,5 +1,6 @@
 <?php
     header("Content-Type: text/plain");
+    
     $info = [
         'first_name' => '',
         'last_name' => '',
